@@ -4,12 +4,29 @@ const bcrypt = require('bcryptjs')
 
 const getUsuarios = async (req, res) => {
 
-    const usuarios = await Usuario.find({}, 'nombre email role google')
+    const desde = Number(req.query.desde) || 0
+
+    // const usuarios = await Usuario
+    //                     .find({}, 'nombre email role google')
+    //                     .skip(desde)
+    //                     .limit(5)
+
+    // const total  = await Usuario.countDocuments()
+
+   const [ usuarios,total] = await Promise.all([
+        Usuario
+            .find({}, 'nombre email role google img')
+            .skip(desde)
+            .limit(5),
+
+        Usuario.countDocuments()
+    ])
 
     res.json({
         ok: true,
         usuarios,
-        id:req.id
+        total,
+        id: req.id
     })
 }
 
@@ -88,7 +105,7 @@ const actualizarUsuario = async (req, res) => {
         res.json({
             ok: true,
             usuario: usuarioActualizado,
-            id:req.id
+            id: req.id
         })
 
     } catch (error) {
@@ -100,7 +117,7 @@ const actualizarUsuario = async (req, res) => {
     }
 }
 
-const borrarUsuario = async (req,res) => {
+const borrarUsuario = async (req, res) => {
 
     const id = req.params.id
 
@@ -108,25 +125,25 @@ const borrarUsuario = async (req,res) => {
 
         const usuarioDB = await Usuario.findById(id)
 
-        if(!usuarioDB){
+        if (!usuarioDB) {
             return res.status(404).json({
-                ok:false,
-                msg:'No existe un usuario por ese id'
+                ok: false,
+                msg: 'No existe un usuario por ese id'
             })
         }
 
         await Usuario.findByIdAndDelete(id)
 
         res.json({
-            ok:true,
-            msg:'Usuario eliminado'
+            ok: true,
+            msg: 'Usuario eliminado'
         })
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            ok:false,
-            msg:'Hable con el administrador'
+            ok: false,
+            msg: 'Hable con el administrador'
         })
     }
 

@@ -18,7 +18,12 @@ dbConnection()
 // //Rutas
 
 app.use('/api/usuarios',require('./routes/usuario'))
+app.use('/api/hospitales',require('./routes/hospital'))
+app.use('/api/medicos',require('./routes/medico'))
+app.use('/api/todo',require('./routes/busqueda'))
+app.use('/api/upload',require('./routes/upload'))
 app.use('/api/login',require('./routes/auth'))
+
 
 
 app.listen(process.env.PORT,()=>{
