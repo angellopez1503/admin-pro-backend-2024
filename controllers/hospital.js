@@ -10,7 +10,7 @@ const getHospitales = async (req, res) => {
         res.json({
             ok: true,
             hospitales,
-            id: req.id
+            id: req.uid
         })
 
     } catch (error) {
@@ -23,8 +23,8 @@ const getHospitales = async (req, res) => {
 }
 
 const crearHospital = async (req, res) => {
-
-    const usuarioId = req.id
+   
+    const usuarioId = req.uid
     const hospital = new Hospital({
         usuario: usuarioId,
         ...req.body
@@ -41,6 +41,7 @@ const crearHospital = async (req, res) => {
         })
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Hable con el administrador'
